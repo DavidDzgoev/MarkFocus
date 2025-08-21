@@ -10,3 +10,5 @@ describe('open gear setting panel', () => {
 		});
 	});
 });
+
+export {};
