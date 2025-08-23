@@ -42,7 +42,7 @@ export const useMonacoEditorOptionsStore = create(
 			lineDecorationsWidth: 15,
 			renderLineHighlight: 'line',
 			cursorBlinking: 'smooth',
-			cursorStyle: 'block-outline',
+			cursorStyle: 'underline',
 		} as MonacoEditorOptionsStore,
 		(set, get) => ({
 			setMonacoEditorOptions: (

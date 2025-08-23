@@ -211,7 +211,7 @@ export default function GearModal({ className }: { className?: string }) {
 									<option value="line-thin">Line-thin</option>
 									<option value="block">Block</option>
 									<option value="block-outline">Block-outline</option>
-									<option value="Underline">Underline</option>
+									<option value="underline">Underline</option>
 									<option value="underline-thin">Underline-thin</option>
 								</select>
 							</section>
