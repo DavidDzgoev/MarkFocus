@@ -35,8 +35,8 @@ const Home: NextPage = () => {
 	return (
 		<div>
 			<Head>
-				<title>Online Markdown Tool</title>
-				<meta name="description" content="Online markdown tool" />
+				<title>MarkFocus</title>
+				<meta name="description" content="MarkFocus" />
 				<link rel="icon" href="/favicon.ico" />
 			</Head>
 			<main className="relative h-screen flex min-w-[768px]">
