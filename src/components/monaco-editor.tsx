@@ -79,7 +79,7 @@ export default function MonacoEditor() {
 	// Управляем слушателем при изменении focusMode
 	React.useEffect(() => {
 		if (!editorRef.current) return;
-
+		console.log('focusMode', focusMode);
 		if (focusMode) {
 			// Создаем слушатель
 			listenerRef.current = editorRef.current.onDidChangeCursorPosition(() => {
