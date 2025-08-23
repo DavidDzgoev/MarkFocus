@@ -23,6 +23,7 @@ type MonacoEditorOptionsStore = {
 		| 'line-thin'
 		| 'block-outline'
 		| 'underline-thin';
+	focusMode: boolean;
 };
 
 export const useMonacoEditorOptionsStore = create(
@@ -43,6 +44,7 @@ export const useMonacoEditorOptionsStore = create(
 			renderLineHighlight: 'line',
 			cursorBlinking: 'smooth',
 			cursorStyle: 'underline',
+			focusMode: false,
 		} as MonacoEditorOptionsStore,
 		(set, get) => ({
 			setMonacoEditorOptions: (
