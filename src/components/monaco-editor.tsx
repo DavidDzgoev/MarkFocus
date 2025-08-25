@@ -9,9 +9,10 @@ export default function MonacoEditor() {
 	const { setMarkdownContent } = useMarkdownContentStore();
 	const { setMonacoEditorOptions, focusMode, ...monacoEditorOptions } =
 		useMonacoEditorOptionsStore();
-	const monacoRef = React.useRef(null);
+	const monacoRef = React.useRef<typeof monaco | null>(null);
 	const editorRef = React.useRef<any>(null);
-	const listenerRef = React.useRef<any>(null); // для хранения ID слушателя
+	const listenerRef = React.useRef<any>(null);
+	const decorationsRef = React.useRef<string[]>([]);
 	const [themeConfig, setThemeConfig] = React.useState<object | undefined>();
 
 	function handleMonacoEditorChange(
@@ -21,17 +22,48 @@ export default function MonacoEditor() {
 		setMarkdownContent(value ?? '');
 	}
 
+	// Добавляем обработчик onMount
+	function handleEditorDidMount(editor: any, monaco: typeof monaco) {
+		editorRef.current = editor;
+		monacoRef.current = monaco;
+		
+		// Если focusMode уже включен, применяем его сразу
+		if (focusMode) {
+			updateFocusMode(editor);
+		}
+	}
+
 	function updateFocusMode(editor: any) {
-		if (!focusMode || !monacoRef.current) {
-			editor.deltaDecorations([], []);
+		if (!focusMode || !monacoRef.current || !editor) {
+			if (editor) {
+				editor.deltaDecorations(decorationsRef.current, []);
+				decorationsRef.current = [];
+			}
 			return;
 		}
 		
 		const position = editor.getPosition();
 		const model = editor.getModel();
 		
+		if (!position || !model) return;
+		
 		// Получаем текущую строку
-		const lineNumber = position.lineNumber;
+		let lineNumber = position.lineNumber;
+		const currentLine = model.getLineContent(lineNumber);
+		
+		// Если курсор на пустой строке, ищем ближайший непустой абзац
+		if (currentLine.trim() === '') {
+			// Ищем предыдущий непустой абзац
+			let prevLine = lineNumber - 1;
+			while (prevLine > 1) {
+				const lineContent = model.getLineContent(prevLine);
+				if (lineContent.trim() !== '') {
+					lineNumber = prevLine;
+					break;
+				}
+				prevLine--;
+			}
+		}
 		
 		// Находим границы абзаца
 		let startLine = lineNumber;
@@ -55,25 +87,41 @@ export default function MonacoEditor() {
 			endLine++;
 		}
 		
-		// Применяем подсветку
-		const decorations = editor.deltaDecorations([], [
-			{
-				range: new monacoRef.current.Range(1, 1, model.getLineCount(), 1),
+		// Создаем декорации
+		const newDecorations: monaco.editor.IModelDeltaDecoration[] = [];
+		
+		// Затемняем весь документ
+		const totalLines = model.getLineCount();
+		for (let i = 1; i <= totalLines; i++) {
+			const lineContent = model.getLineContent(i);
+			const lineLength = lineContent.length;
+			
+			newDecorations.push({
+				range: new monacoRef.current!.Range(i, 1, i, lineLength + 1),
 				options: {
 					inlineClassName: 'focus-mode-dimmed'
 				}
-			},
-			{
-				range: new monacoRef.current.Range(startLine, 1, endLine, 1),
-				options: {
-					inlineClassName: 'focus-mode-highlighted'
-				}
+			});
+		}
+		
+		// Подсвечиваем только непустые строки текущего абзаца
+		for (let i = startLine; i <= endLine; i++) {
+			const lineContent = model.getLineContent(i);
+			const lineLength = lineContent.length;
+			
+			// Подсвечиваем только непустые строки
+			if (lineContent.trim() !== '') {
+				newDecorations.push({
+					range: new monacoRef.current!.Range(i, 1, i, lineLength + 1),
+					options: {
+						inlineClassName: 'focus-mode-highlighted'
+					}
+				});
 			}
-		]);
-
-		console.log('startLine', startLine);
-		console.log('endLine', endLine);
-		console.log('focusMode', focusMode);
+		}
+		
+		// Применяем декорации
+		decorationsRef.current = editor.deltaDecorations(decorationsRef.current, newDecorations);
 	}
 
 	// Управляем слушателем при изменении focusMode
@@ -94,7 +142,8 @@ export default function MonacoEditor() {
 				listenerRef.current = null;
 			}
 			// Убираем декорации
-			editorRef.current.deltaDecorations([], []);
+			editorRef.current.deltaDecorations(decorationsRef.current, []);
+			decorationsRef.current = [];
 		}
 
 		// Cleanup при размонтировании
@@ -107,21 +156,27 @@ export default function MonacoEditor() {
 
 	// Добавляем CSS для подсветки
 	React.useEffect(() => {
-		if (focusMode && monacoRef.current) {
+		if (focusMode) {
 			const style = document.createElement('style');
+			style.id = 'focus-mode-styles';
 			style.textContent = `
 				.focus-mode-dimmed {
-					opacity: 0.4 !important;
+					opacity: 0.3 !important;
+					transition: opacity 0.2s ease-in-out;
 				}
 				.focus-mode-highlighted {
 					opacity: 1 !important;
 					font-weight: 500 !important;
+					transition: opacity 0.2s ease-in-out;
 				}
 			`;
 			document.head.appendChild(style);
 			
 			return () => {
-				document.head.removeChild(style);
+				const existingStyle = document.getElementById('focus-mode-styles');
+				if (existingStyle) {
+					document.head.removeChild(existingStyle);
+				}
 			};
 		}
 	}, [focusMode]);
@@ -133,6 +188,7 @@ export default function MonacoEditor() {
 			theme={monacoEditorOptions.theme}
 			language={monacoEditorOptions.language}
 			onChange={handleMonacoEditorChange}
+			onMount={handleEditorDidMount}
 			options={{
 				cursorStyle: monacoEditorOptions.cursorStyle,
 				cursorBlinking: monacoEditorOptions.cursorBlinking,
