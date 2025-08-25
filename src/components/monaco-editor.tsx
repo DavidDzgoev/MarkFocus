@@ -23,9 +23,9 @@ export default function MonacoEditor() {
 	}
 
 	// Добавляем обработчик onMount
-	function handleEditorDidMount(editor: any, monaco: typeof monaco) {
+	function handleEditorDidMount(editor: any, monacoInstance: typeof monaco) {
 		editorRef.current = editor;
-		monacoRef.current = monaco;
+		monacoRef.current = monacoInstance;
 		
 		// Если focusMode уже включен, применяем его сразу
 		if (focusMode) {
