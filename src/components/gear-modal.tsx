@@ -23,7 +23,7 @@ type FormData = {
 export default function GearModal({ className }: { className?: string }) {
 	const { register, handleSubmit } = useForm<FormData>();
 	const { setGearStatus } = useGearStatusStore();
-	const { setMonacoEditorOptions, focusMode, ...editorConfig } =
+	const { setMonacoEditorOptions, ...editorConfig } =
 		useMonacoEditorOptionsStore();
 
 	const handleFormSubmit = (data: FormData) => {
@@ -279,24 +279,6 @@ export default function GearModal({ className }: { className?: string }) {
 						</button>
 					</div>
 				</form>
-
-				<div className="flex items-center justify-between mt-6 pt-6 border-t border-slate-100">
-					<label className="text-base font-medium text-slate-700">
-						Focus Mode
-					</label>
-					<button
-						onClick={() => setMonacoEditorOptions({ focusMode: !focusMode })}
-						className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-							focusMode ? 'bg-blue-600' : 'bg-gray-200'
-						}`}
-					>
-						<span
-							className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-								focusMode ? 'translate-x-6' : 'translate-x-1'
-							}`}
-						/>
-					</button>
-				</div>
 			</div>
 		</>
 	);
