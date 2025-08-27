@@ -56,9 +56,9 @@ const Home: NextPage = () => {
 				<div className="grid grid-cols-2 grid-flow-row w-full">
 					{/* Monaco Editor / Textarea */}
 					<div
-						className={`col-span-1 h-full sm:border-b sm:border-slate-200 sm:border-r-0 ${
+						className={`col-span-1 h-full ${
 							monacoEditorOptions.editorType === 'text' ? 'px-14' : 'px-8'
-						} py-14 overflow-hidden md:border-r border-slate-100 z-0 ${
+						} py-14 overflow-hidden z-0 ${
 							editorTheme() ? 'bg-vs-dark' : 'bg-white'
 						} relative`}
 					>
@@ -94,7 +94,7 @@ const Home: NextPage = () => {
 					</div>
 
 					{/* Markdown Preview */}
-					<div className="col-span-1 h-full p-14 prose">
+					<div className="col-span-1 h-full prose">
 						<MarkdownParser />
 					</div>
 				</div>

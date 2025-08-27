@@ -25,8 +25,8 @@ export default function MarkdownParser() {
 	};
 
 	return (
-		<div className={`h-full p-6 ${themeClasses.background} ${themeClasses.text}`}>
-			<div className={`${themeClasses.prose} max-w-none`}>
+		<div className={`h-full w-full ${themeClasses.background} ${themeClasses.text}`}>
+			<div className={`h-full overflow-y-auto p-6 ${themeClasses.prose} max-w-none`}>
 				<ReactMarkdownParser
 					remarkPlugins={[remarkGfm]}
 					components={{
