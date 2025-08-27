@@ -19,8 +19,8 @@ export default function MarkdownParser() {
 	// Определяем классы для темной/светлой темы
 	const isDark = theme === 'vs-dark';
 	const themeClasses = {
-		background: isDark ? '.bg-vs-dark' : 'bg-white',
-		text: isDark ? 'text-gray-100' : 'text-gray-900',
+		background: isDark ? 'bg-[rgb(30,30,30)]' : 'bg-white',
+		text: isDark ? 'text-[#d4d4d4]' : 'text-gray-900',
 		prose: isDark ? 'prose prose-invert' : 'prose'
 	};
 
