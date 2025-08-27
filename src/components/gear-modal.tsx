@@ -48,37 +48,6 @@ export default function GearModal({ className }: { className?: string }) {
 				>
 					<div className="flex items-center py-5 space-x-5">
 						<div className="flex items-center space-x-4">
-							<h1 className="text-base font-medium text-slate-700">Editor</h1>
-							<section className="relative flex flex-start items-center">
-								<span className="absolute inset-y-0 right-2 inline-flex items-center text-slate-500 z-0">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-4 w-4"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-										strokeWidth="2"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											d="M19 9l-7 7-7-7"
-										/>
-									</svg>
-								</span>
-								<select
-									id="editorType"
-									data-testid="editorType"
-									className="pl-2.5 pr-8 py-1.5 bg-transparent text-sm text-slate-600 border border-slate-300 rounded-lg shadow-sm outline-none appearance-none z-10"
-									defaultValue={editorConfig.editorType}
-									{...register('editorType')}
-								>
-									<option value="text">Text</option>
-									<option value="monaco">Monaco</option>
-								</select>
-							</section>
-						</div>
-						<div className="flex items-center space-x-4">
 							<h1 className="text-base font-medium text-slate-700">Theme</h1>
 							<section className="relative flex flex-start items-center">
 								<span className="absolute inset-y-0 right-2 inline-flex items-center text-slate-500 z-0">
