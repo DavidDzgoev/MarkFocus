@@ -155,24 +155,6 @@ export default function GearModal({ className }: { className?: string }) {
 						</section>
 					</div>
 
-					{/* Show mini map */}
-					<div className="flex items-center justify-between py-4">
-						<label
-							className="text-base font-medium text-slate-700"
-							htmlFor="minimap"
-						>
-							Show mini map
-						</label>
-						<input
-							className="w-5 h-5 border-gray-200 accent-slate-600"
-							id="minimap"
-							type="checkbox"
-							value="minimap"
-							defaultChecked={editorConfig.minimap ?? false}
-							{...register('minimap')}
-						/>
-					</div>
-
 					{/* Show Line Number */}
 					<div className="flex items-center justify-between py-4">
 						<h1 className="text-base font-medium text-slate-700">
@@ -207,6 +189,24 @@ export default function GearModal({ className }: { className?: string }) {
 								<option value="relative">Relative</option>
 							</select>
 						</section>
+					</div>
+
+					{/* Show mini map */}
+					<div className="flex items-center justify-between py-4">
+						<label
+							className="text-base font-medium text-slate-700"
+							htmlFor="minimap"
+						>
+							Show mini map
+						</label>
+						<input
+							className="w-5 h-5 border-gray-200 accent-slate-600"
+							id="minimap"
+							type="checkbox"
+							value="minimap"
+							defaultChecked={editorConfig.minimap ?? false}
+							{...register('minimap')}
+						/>
 					</div>
 
 					<div className="pt-6 space-x-5 text-right">
