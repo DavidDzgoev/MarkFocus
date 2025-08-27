@@ -8,10 +8,12 @@ import {
 
 import { useMarkdownContentStore } from '../global-stores/useMarkdownContentStore';
 import { useMonacoEditorOptionsStore } from '../global-stores/useMonacoEditorOptionsStore';
+import { useSplitterStore } from '../global-stores/useSplitterStore';
 
 export default function MarkdownParser() {
 	const { markdownContent } = useMarkdownContentStore();
 	const { theme } = useMonacoEditorOptionsStore();
+	const { editorWidth, setEditorWidth } = useSplitterStore();
 
 	// Выбираем стиль синтаксиса в зависимости от темы Monaco
 	const syntaxStyle = theme === 'vs-dark' ? dark : vs;
@@ -24,8 +26,41 @@ export default function MarkdownParser() {
 		prose: isDark ? 'prose prose-invert' : 'prose'
 	};
 
+	// Функция для восстановления редактора
+	const handleRestoreEditor = () => {
+		setEditorWidth(50); // Восстанавливаем на 50%
+	};
+
 	return (
-		<div className={`h-full w-full ${themeClasses.background} ${themeClasses.text}`}>
+		<div className={`h-full w-full ${themeClasses.background} ${themeClasses.text} relative`}>
+			{/* Кнопка восстановления редактора - показывается только когда редактор скрыт */}
+			{editorWidth === 0 && (
+				<button
+					onClick={handleRestoreEditor}
+					className={`absolute top-4 left-4 z-20 p-2 rounded-lg shadow-md border transition duration-300 ease-in-out hover:shadow-lg ${
+						isDark 
+							? 'bg-[rgb(30,30,30)] border-gray-600 text-gray-300 hover:text-gray-100' 
+							: 'bg-white border-slate-200 text-slate-600 hover:text-slate-800'
+					}`}
+					title="Restore editor"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="h-5 w-5"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+						strokeWidth="2"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							d="M10 19l-7-7m0 0l7-7m-7 7h18"
+						/>
+					</svg>
+				</button>
+			)}
+
 			<div className={`h-full overflow-y-auto p-6 ${themeClasses.prose} max-w-none`}>
 				<ReactMarkdownParser
 					remarkPlugins={[remarkGfm]}

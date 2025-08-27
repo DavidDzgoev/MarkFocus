@@ -13,18 +13,67 @@ import { useEditorTypeStore } from '../global-stores/useEditorTypeStore';
 import { useMonacoEditorOptionsStore } from '../global-stores/useMonacoEditorOptionsStore';
 import { useGearStatusStore } from '../global-stores/useGearStatusStore';
 import { useSidebarStatusStore } from '../global-stores/useSidebarStatusStore';
+import { useSplitterStore } from '../global-stores/useSplitterStore';
 
 const Home: NextPage = () => {
 	const { gearStatus } = useGearStatusStore();
 	const { setMonacoEditorOptions, ...monacoEditorOptions } =
 		useMonacoEditorOptionsStore();
 	const { isOpen, openSidebar } = useSidebarStatusStore();
+	const { editorWidth, minEditorWidth, maxEditorWidth, setEditorWidth } = useSplitterStore();
 
 	const editorTheme = () => {
 		const darkThemes = ['vs-dark'];
 		if (darkThemes.includes(monacoEditorOptions.theme)) {
 			return true;
 		}
+	};
+
+	const isDark = editorTheme();
+
+	// Обработчик перетаскивания разделителя
+	const handleMouseDown = (e: React.MouseEvent) => {
+		e.preventDefault();
+		
+		const startX = e.clientX;
+		const startWidth = editorWidth;
+		const containerWidth = window.innerWidth - (isOpen ? 256 : 0); // 256px = ширина sidebar
+		
+		const handleMouseMove = (e: MouseEvent) => {
+			const deltaX = e.clientX - startX;
+			const deltaPercent = (deltaX / containerWidth) * 100;
+			const newWidth = Math.max(minEditorWidth, Math.min(maxEditorWidth, startWidth + deltaPercent));
+			
+			console.log('Mouse move:', { deltaX, deltaPercent, newWidth, startWidth });
+			
+			// Если разделитель уведен в край (менее 10%), скрываем редактор
+			if (newWidth < 10) {
+				console.log('Hiding editor');
+				setEditorWidth(0);
+			} 
+			// Если разделитель уведен в другой край (более 90%), скрываем preview
+			else if (newWidth > 90) {
+				console.log('Hiding preview');
+				setEditorWidth(100);
+			} 
+			else {
+				console.log('Setting editor width:', newWidth);
+				setEditorWidth(newWidth);
+			}
+		};
+		
+		const handleMouseUp = () => {
+			document.removeEventListener('mousemove', handleMouseMove);
+			document.removeEventListener('mouseup', handleMouseUp);
+		};
+		
+		document.addEventListener('mousemove', handleMouseMove);
+		document.addEventListener('mouseup', handleMouseUp);
+	};
+
+	// Обработчик двойного клика для сброса размера
+	const handleDoubleClick = () => {
+		setEditorWidth(50);
 	};
 
 	return (
@@ -53,48 +102,64 @@ const Home: NextPage = () => {
 				)}
 
 				{/* Right side */}
-				<div className="grid grid-cols-2 grid-flow-row w-full">
+				<div className="flex w-full">
 					{/* Monaco Editor / Textarea */}
-					<div
-						className={`col-span-1 h-full ${
-							monacoEditorOptions.editorType === 'text' ? 'px-14' : 'px-8'
-						} py-14 overflow-hidden z-0 ${
-							editorTheme() ? 'bg-vs-dark' : 'bg-white'
-						} relative`}
-					>
-						{/* Sidebar Toggle Button - показывается только когда sidebar закрыт */}
-						{!isOpen && (
-							<button
-								onClick={openSidebar}
-								className="absolute top-4 left-4 z-20 p-2 bg-white rounded-lg shadow-md border border-slate-200 text-slate-600 transition duration-300 ease-in-out hover:text-slate-800 hover:shadow-lg"
-								title="Open sidebar"
-							>
-								<svg
-									xmlns="http://www.w3.org/2000/svg"
-									className="h-5 w-5"
-									fill="none"
-									viewBox="0 0 24 24"
-									stroke="currentColor"
-									strokeWidth="2"
+					{editorWidth > 0 && (
+						<div
+							className={`h-full ${
+								monacoEditorOptions.editorType === 'text' ? 'px-14' : 'px-8'
+							} py-14 overflow-hidden z-0 ${
+								isDark ? 'bg-[rgb(30,30,30)]' : 'bg-white'
+							} relative`}
+							style={{ width: `${editorWidth}%` }}
+						>
+							{/* Sidebar Toggle Button - показывается только когда sidebar закрыт */}
+							{!isOpen && (
+								<button
+									onClick={openSidebar}
+									className="absolute top-4 left-4 z-20 p-2 bg-white rounded-lg shadow-md border border-slate-200 text-slate-600 transition duration-300 ease-in-out hover:text-slate-800 hover:shadow-lg"
+									title="Open sidebar"
 								>
-									<path
-										strokeLinecap="round"
-										strokeLinejoin="round"
-										d="M4 6h16M4 12h16M4 18h16"
-									/>
-								</svg>
-							</button>
-						)}
-						
-						{monacoEditorOptions.editorType === 'text' ? (
-							<Textarea />
-						) : (
-							<MonacoEditor />
-						)}
-					</div>
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										className="h-5 w-5"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+										strokeWidth="2"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											d="M4 6h16M4 12h16M4 18h16"
+										/>
+									</svg>
+								</button>
+							)}
+							
+							{monacoEditorOptions.editorType === 'text' ? (
+								<Textarea />
+							) : (
+								<MonacoEditor />
+							)}
+						</div>
+					)}
+
+					{/* Splitter */}
+					<div
+						className={`h-full w-1 bg-gray-300 hover:bg-gray-400 cursor-col-resize transition-colors duration-200 ${
+							editorWidth === 0 ? 'hidden' : ''
+						}`}
+						onMouseDown={handleMouseDown}
+						onDoubleClick={handleDoubleClick}
+						title="Drag to resize, double-click to reset"
+					/>
 
 					{/* Markdown Preview */}
-					<div className="col-span-1 h-full prose">
+					<div 
+						className="h-full prose"
+						style={{ width: editorWidth === 0 ? '100%' : `${100 - editorWidth}%` }}
+					>
 						<MarkdownParser />
 					</div>
 				</div>
