@@ -7,7 +7,6 @@ import { useMonacoEditorOptionsStore } from '../global-stores/useMonacoEditorOpt
 type FormData = {
 	editorType: 'monaco' | 'text';
 	theme: string;
-	language: 'markdown' | 'javascript' | 'typescript';
 	minimap: boolean;
 	lineNumbers: 'on' | 'off' | 'relative';
 	cursorBlinking: 'smooth' | 'blink' | 'phase' | 'expand' | 'solid';
@@ -75,38 +74,6 @@ export default function GearModal({ className }: { className?: string }) {
 								>
 									<option value="vs-light">VS Light</option>
 									<option value="vs-dark">VS Dark</option>
-								</select>
-							</section>
-						</div>
-						<div className="flex items-center space-x-4">
-							<h1 className="text-base font-medium text-slate-700">Language</h1>
-							<section className="relative flex flex-start items-center">
-								<span className="absolute inset-y-0 right-2 inline-flex items-center text-slate-500 z-0">
-									<svg
-										xmlns="http://www.w3.org/2000/svg"
-										className="h-4 w-4"
-										fill="none"
-										viewBox="0 0 24 24"
-										stroke="currentColor"
-										strokeWidth="2"
-									>
-										<path
-											strokeLinecap="round"
-											strokeLinejoin="round"
-											d="M19 9l-7 7-7-7"
-										/>
-									</svg>
-								</span>
-								<select
-									id="language"
-									data-testid="language"
-									className="pl-2.5 pr-8 py-1.5 bg-transparent text-sm text-slate-600 border border-slate-300 rounded-lg shadow-sm outline-none appearance-none z-10"
-									defaultValue={editorConfig.language}
-									{...register('language')}
-								>
-									<option value="markdown">Markdown</option>
-									<option value="javascript">JavaScript</option>
-									<option value="typescript">TypeScript</option>
 								</select>
 							</section>
 						</div>
