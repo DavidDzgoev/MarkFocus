@@ -10,8 +10,8 @@ type SplitterStore = {
 
 export const useSplitterStore = create<SplitterStore>((set) => ({
 	editorWidth: 50, // процент от общей ширины
-	minEditorWidth: 5, // минимальная ширина в процентах (уменьшено с 20 до 5)
-	maxEditorWidth: 80, // максимальная ширина в процентах
+	minEditorWidth: 5, // минимальная ширина в процентах
+	maxEditorWidth: 100, // максимальная ширина в процентах (увеличено с 80 до 100)
 	setEditorWidth: (width: number) => set({ editorWidth: width }),
 	resetEditorWidth: () => set({ editorWidth: 50 }),
 }));

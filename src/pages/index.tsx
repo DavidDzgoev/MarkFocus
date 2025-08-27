@@ -148,7 +148,7 @@ const Home: NextPage = () => {
 					{/* Splitter */}
 					<div
 						className={`h-full w-1 bg-gray-300 hover:bg-gray-400 cursor-col-resize transition-colors duration-200 ${
-							editorWidth === 0 ? 'hidden' : ''
+							editorWidth === 0 || editorWidth === 100 ? 'hidden' : ''
 						}`}
 						onMouseDown={handleMouseDown}
 						onDoubleClick={handleDoubleClick}
@@ -156,12 +156,14 @@ const Home: NextPage = () => {
 					/>
 
 					{/* Markdown Preview */}
-					<div 
-						className="h-full prose"
-						style={{ width: editorWidth === 0 ? '100%' : `${100 - editorWidth}%` }}
-					>
-						<MarkdownParser />
-					</div>
+					{editorWidth < 100 && (
+						<div 
+							className="h-full prose"
+							style={{ width: editorWidth === 0 ? '100%' : `${100 - editorWidth}%` }}
+						>
+							<MarkdownParser />
+						</div>
+					)}
 				</div>
 			</main>
 		</div>

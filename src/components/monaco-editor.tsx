@@ -4,11 +4,13 @@ import ReactMonacoEditor from '@monaco-editor/react';
 
 import { useMarkdownContentStore } from '../global-stores/useMarkdownContentStore';
 import { useMonacoEditorOptionsStore } from '../global-stores/useMonacoEditorOptionsStore';
+import { useSplitterStore } from '../global-stores/useSplitterStore';
 
 export default function MonacoEditor() {
 	const { setMarkdownContent } = useMarkdownContentStore();
 	const { setMonacoEditorOptions, focusMode, ...monacoEditorOptions } =
 		useMonacoEditorOptionsStore();
+	const { editorWidth, setEditorWidth } = useSplitterStore();
 	const monacoRef = React.useRef<typeof monaco | null>(null);
 	const editorRef = React.useRef<any>(null);
 	const listenerRef = React.useRef<any>(null);
@@ -21,6 +23,11 @@ export default function MonacoEditor() {
 	) {
 		setMarkdownContent(value ?? '');
 	}
+
+	// Функция для восстановления preview
+	const handleRestorePreview = () => {
+		setEditorWidth(50); // Восстанавливаем на 50%
+	};
 
 	// Добавляем обработчик onMount
 	function handleEditorDidMount(editor: any, monacoInstance: typeof monaco) {
@@ -182,29 +189,55 @@ export default function MonacoEditor() {
 	}, [focusMode]);
 
 	return (
-		<ReactMonacoEditor
-			height="100%"
-			width="100%"
-			theme={monacoEditorOptions.theme}
-			language={monacoEditorOptions.language}
-			onChange={handleMonacoEditorChange}
-			onMount={handleEditorDidMount}
-			options={{
-				cursorStyle: monacoEditorOptions.cursorStyle,
-				cursorBlinking: monacoEditorOptions.cursorBlinking,
-				minimap: {
-					enabled: monacoEditorOptions.minimap,
-				},
-				lineNumbers: monacoEditorOptions.lineNumbers,
-				fontSize: monacoEditorOptions.fontSize,
-				folding: monacoEditorOptions.folding,
-				lineDecorationsWidth: monacoEditorOptions.lineDecorationsWidth,
-				renderLineHighlight: monacoEditorOptions.renderLineHighlight,
-				scrollbar: {
-					vertical: monacoEditorOptions.verticalScrollbar,
-					verticalScrollbarSize: monacoEditorOptions.verticalScrollbarSize,
-				},
-			}}
-		/>
+		<div className="relative h-full w-full">
+			{/* Кнопка восстановления preview - показывается только когда preview скрыт */}
+			{editorWidth === 100 && (
+				<button
+					onClick={handleRestorePreview}
+					className="absolute top-4 right-4 z-20 p-2 bg-white rounded-lg shadow-md border border-slate-200 text-slate-600 transition duration-300 ease-in-out hover:text-slate-800 hover:shadow-lg"
+					title="Restore preview"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="h-5 w-5"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+						strokeWidth="2"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							d="M14 5l7 7m0 0l-7 7m7-7H3"
+						/>
+					</svg>
+				</button>
+			)}
+
+			<ReactMonacoEditor
+				height="100%"
+				width="100%"
+				theme={monacoEditorOptions.theme}
+				language={monacoEditorOptions.language}
+				onChange={handleMonacoEditorChange}
+				onMount={handleEditorDidMount}
+				options={{
+					cursorStyle: monacoEditorOptions.cursorStyle,
+					cursorBlinking: monacoEditorOptions.cursorBlinking,
+					minimap: {
+						enabled: monacoEditorOptions.minimap,
+					},
+					lineNumbers: monacoEditorOptions.lineNumbers,
+					fontSize: monacoEditorOptions.fontSize,
+					folding: monacoEditorOptions.folding,
+					lineDecorationsWidth: monacoEditorOptions.lineDecorationsWidth,
+					renderLineHighlight: monacoEditorOptions.renderLineHighlight,
+					scrollbar: {
+						vertical: monacoEditorOptions.verticalScrollbar,
+						verticalScrollbarSize: monacoEditorOptions.verticalScrollbarSize,
+					},
+				}}
+			/>
+		</div>
 	);
 }
