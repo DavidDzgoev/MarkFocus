@@ -247,6 +247,7 @@ export default function GearModal({ className }: { className?: string }) {
 							render={({ field }) => (
 								<input
 									{...field}
+									value="minimap"
 									className={`w-5 h-5 ${themeClasses.checkbox}`}
 									type="checkbox"
 									checked={field.value}
