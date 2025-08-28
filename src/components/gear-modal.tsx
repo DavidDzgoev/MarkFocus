@@ -1,5 +1,5 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 
 import { useGearStatusStore } from '../global-stores/useGearStatusStore';
 import { useMonacoEditorOptionsStore } from '../global-stores/useMonacoEditorOptionsStore';
@@ -20,13 +20,22 @@ type FormData = {
 };
 
 export default function GearModal({ className }: { className?: string }) {
-	const { register, handleSubmit } = useForm<FormData>();
+	const { register, handleSubmit, control, setValue } = useForm<FormData>();
 	const { setGearStatus } = useGearStatusStore();
-	const { setMonacoEditorOptions, theme, ...editorConfig } =
+	const { setMonacoEditorOptions, ...editorConfig } =
 		useMonacoEditorOptionsStore();
 
+	// Устанавливаем значения формы при монтировании
+	React.useEffect(() => {
+		setValue('theme', editorConfig.theme);
+		setValue('cursorBlinking', editorConfig.cursorBlinking);
+		setValue('cursorStyle', editorConfig.cursorStyle);
+		setValue('lineNumbers', editorConfig.lineNumbers);
+		setValue('minimap', editorConfig.minimap);
+	}, [editorConfig, setValue]);
+
 	// Определяем классы для темной/светлой темы
-	const isDark = theme === 'vs-dark';
+	const isDark = editorConfig.theme === 'vs-dark';
 	const themeClasses = {
 		background: isDark ? 'bg-[rgb(30,30,30)]' : 'bg-white',
 		text: isDark ? 'text-[#d4d4d4]' : 'text-slate-600',
@@ -81,16 +90,20 @@ export default function GearModal({ className }: { className?: string }) {
 									/>
 								</svg>
 							</span>
-							<select
-								id="theme"
-								data-testid="theme"
-								className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
+							<Controller
+								name="theme"
+								control={control}
 								defaultValue={editorConfig.theme}
-								{...register('theme')}
-							>
-								<option value="vs-light">VS Light</option>
-								<option value="vs-dark">VS Dark</option>
-							</select>
+								render={({ field }) => (
+									<select
+										{...field}
+										className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
+									>
+										<option value="vs-light">VS Light</option>
+										<option value="vs-dark">VS Dark</option>
+									</select>
+								)}
+							/>
 						</section>
 					</div>
 
@@ -116,19 +129,23 @@ export default function GearModal({ className }: { className?: string }) {
 									/>
 								</svg>
 							</span>
-							<select
-								id="cursorBlinking"
-								data-testid="cursorBlinking"
-								className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
+							<Controller
+								name="cursorBlinking"
+								control={control}
 								defaultValue={editorConfig.cursorBlinking}
-								{...register('cursorBlinking')}
-							>
-								<option value="blink">Blink</option>
-								<option value="smooth">Smooth</option>
-								<option value="Phase">Phase</option>
-								<option value="Expand">Expand</option>
-								<option value="Solid">Solid</option>
-							</select>
+								render={({ field }) => (
+									<select
+										{...field}
+										className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
+									>
+										<option value="blink">Blink</option>
+										<option value="smooth">Smooth</option>
+										<option value="Phase">Phase</option>
+										<option value="Expand">Expand</option>
+										<option value="Solid">Solid</option>
+									</select>
+								)}
+							/>
 						</section>
 					</div>
 
@@ -154,20 +171,24 @@ export default function GearModal({ className }: { className?: string }) {
 									/>
 								</svg>
 							</span>
-							<select
-								id="cursorStyle"
-								data-testid="cursorStyle"
-								className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
+							<Controller
+								name="cursorStyle"
+								control={control}
 								defaultValue={editorConfig.cursorStyle}
-								{...register('cursorStyle')}
-							>
-								<option value="line">Line</option>
-								<option value="line-thin">Line-thin</option>
-								<option value="block">Block</option>
-								<option value="block-outline">Block-outline</option>
-								<option value="underline">Underline</option>
-								<option value="underline-thin">Underline-thin</option>
-							</select>
+								render={({ field }) => (
+									<select
+										{...field}
+										className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
+									>
+										<option value="line">Line</option>
+										<option value="line-thin">Line-thin</option>
+										<option value="block">Block</option>
+										<option value="block-outline">Block-outline</option>
+										<option value="underline">Underline</option>
+										<option value="underline-thin">Underline-thin</option>
+									</select>
+								)}
+							/>
 						</section>
 					</div>
 
@@ -193,17 +214,21 @@ export default function GearModal({ className }: { className?: string }) {
 									/>
 								</svg>
 							</span>
-							<select
-								id="lineNumbers"
-								data-testid="lineNumbers"
-								className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
+							<Controller
+								name="lineNumbers"
+								control={control}
 								defaultValue={editorConfig.lineNumbers ?? 'off'}
-								{...register('lineNumbers')}
-							>
-								<option value="on">On</option>
-								<option value="off">Off</option>
-								<option value="relative">Relative</option>
-							</select>
+								render={({ field }) => (
+									<select
+										{...field}
+										className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
+									>
+										<option value="on">On</option>
+										<option value="off">Off</option>
+										<option value="relative">Relative</option>
+									</select>
+								)}
+							/>
 						</section>
 					</div>
 
@@ -215,13 +240,18 @@ export default function GearModal({ className }: { className?: string }) {
 						>
 							Show mini map
 						</label>
-						<input
-							className={`w-5 h-5 ${themeClasses.checkbox}`}
-							id="minimap"
-							type="checkbox"
-							value="minimap"
-							defaultChecked={editorConfig.minimap ?? false}
-							{...register('minimap')}
+						<Controller
+							name="minimap"
+							control={control}
+							defaultValue={editorConfig.minimap ?? false}
+							render={({ field }) => (
+								<input
+									{...field}
+									className={`w-5 h-5 ${themeClasses.checkbox}`}
+									type="checkbox"
+									checked={field.value}
+								/>
+							)}
 						/>
 					</div>
 
