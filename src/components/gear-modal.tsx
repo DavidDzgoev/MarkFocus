@@ -22,8 +22,24 @@ type FormData = {
 export default function GearModal({ className }: { className?: string }) {
 	const { register, handleSubmit } = useForm<FormData>();
 	const { setGearStatus } = useGearStatusStore();
-	const { setMonacoEditorOptions, ...editorConfig } =
+	const { setMonacoEditorOptions, theme, ...editorConfig } =
 		useMonacoEditorOptionsStore();
+
+	// Определяем классы для темной/светлой темы
+	const isDark = theme === 'vs-dark';
+	const themeClasses = {
+		background: isDark ? 'bg-[rgb(30,30,30)]' : 'bg-white',
+		text: isDark ? 'text-[#d4d4d4]' : 'text-slate-600',
+		textSecondary: isDark ? 'text-[#d4d4d4]' : 'text-slate-700',
+		border: isDark ? 'border-gray-600' : 'border-slate-200',
+		divider: isDark ? 'divide-gray-600' : 'divide-slate-100',
+		select: isDark ? 'bg-[rgb(45,45,45)] border-gray-600 text-[#d4d4d4]' : 'bg-transparent border-slate-300 text-slate-600',
+		icon: isDark ? 'text-gray-400' : 'text-slate-500',
+		button: isDark ? 'bg-[rgb(45,45,45)] border-gray-600 text-[#d4d4d4] hover:bg-[rgb(55,55,55)]' : 'bg-slate-50 border-slate-50 text-slate-500 hover:bg-slate-100',
+		buttonCancel: isDark ? 'hover:bg-red-800 hover:text-red-200' : 'hover:bg-rose-400 hover:text-white',
+		buttonSubmit: isDark ? 'hover:bg-gray-600 hover:text-gray-200' : 'hover:bg-slate-500 hover:text-white',
+		checkbox: isDark ? 'border-gray-600 accent-gray-400' : 'border-gray-200 accent-slate-600',
+	};
 
 	const handleFormSubmit = (data: FormData) => {
 		if (data.minimap) {
@@ -37,19 +53,19 @@ export default function GearModal({ className }: { className?: string }) {
 
 	return (
 		<>
-			<div className={className}>
-				<header className="text-2xl font-bold text-slate-600 text-center">
+			<div className={`${className} ${themeClasses.background} ${themeClasses.border}`}>
+				<header className={`text-2xl font-bold text-center ${themeClasses.text}`}>
 					Editor Settings
 				</header>
 				<form
-					className="mt-3 divide-y divide-slate-100"
+					className={`mt-3 divide-y ${themeClasses.divider}`}
 					onSubmit={handleSubmit(handleFormSubmit)}
 				>
 					{/* Theme */}
 					<div className="flex items-center justify-between py-4">
-						<h1 className="text-base font-medium text-slate-700">Theme</h1>
+						<h1 className={`text-base font-medium ${themeClasses.textSecondary}`}>Theme</h1>
 						<section className="relative flex flex-start items-center">
-							<span className="absolute inset-y-0 right-2 inline-flex items-center text-slate-500 z-0">
+							<span className={`absolute inset-y-0 right-2 inline-flex items-center z-0 ${themeClasses.icon}`}>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									className="h-4 w-4"
@@ -68,7 +84,7 @@ export default function GearModal({ className }: { className?: string }) {
 							<select
 								id="theme"
 								data-testid="theme"
-								className="pl-2.5 pr-8 py-1.5 bg-transparent text-sm text-slate-600 border border-slate-300 rounded-lg shadow-sm outline-none appearance-none z-10"
+								className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
 								defaultValue={editorConfig.theme}
 								{...register('theme')}
 							>
@@ -80,11 +96,11 @@ export default function GearModal({ className }: { className?: string }) {
 
 					{/* Cursor Blinking */}
 					<div className="flex items-center justify-between py-4">
-						<h1 className="text-base font-medium text-slate-700">
+						<h1 className={`text-base font-medium ${themeClasses.textSecondary}`}>
 							Cursor Blinking
 						</h1>
 						<section className="relative flex flex-start items-center">
-							<span className="absolute inset-y-0 right-2 inline-flex items-center text-slate-500 z-0">
+							<span className={`absolute inset-y-0 right-2 inline-flex items-center z-0 ${themeClasses.icon}`}>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									className="h-4 w-4"
@@ -103,7 +119,7 @@ export default function GearModal({ className }: { className?: string }) {
 							<select
 								id="cursorBlinking"
 								data-testid="cursorBlinking"
-								className="pl-2.5 pr-8 py-1.5 bg-transparent text-sm text-slate-600 border border-slate-300 rounded-lg shadow-sm outline-none appearance-none z-10"
+								className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
 								defaultValue={editorConfig.cursorBlinking}
 								{...register('cursorBlinking')}
 							>
@@ -118,11 +134,11 @@ export default function GearModal({ className }: { className?: string }) {
 
 					{/* Cursor Style */}
 					<div className="flex items-center justify-between py-4">
-						<h1 className="text-base font-medium text-slate-700">
+						<h1 className={`text-base font-medium ${themeClasses.textSecondary}`}>
 							Cursor Style
 						</h1>
 						<section className="relative flex flex-start items-center">
-							<span className="absolute inset-y-0 right-2 inline-flex items-center text-slate-500 z-0">
+							<span className={`absolute inset-y-0 right-2 inline-flex items-center z-0 ${themeClasses.icon}`}>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									className="h-4 w-4"
@@ -141,7 +157,7 @@ export default function GearModal({ className }: { className?: string }) {
 							<select
 								id="cursorStyle"
 								data-testid="cursorStyle"
-								className="pl-2.5 pr-8 py-1.5 bg-transparent text-sm text-slate-600 border border-slate-300 rounded-lg shadow-sm outline-none appearance-none z-10"
+								className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
 								defaultValue={editorConfig.cursorStyle}
 								{...register('cursorStyle')}
 							>
@@ -157,11 +173,11 @@ export default function GearModal({ className }: { className?: string }) {
 
 					{/* Show Line Number */}
 					<div className="flex items-center justify-between py-4">
-						<h1 className="text-base font-medium text-slate-700">
+						<h1 className={`text-base font-medium ${themeClasses.textSecondary}`}>
 							Show Line Number
 						</h1>
 						<section className="relative flex flex-start items-center">
-							<span className="absolute inset-y-0 right-2 inline-flex items-center text-slate-500 z-0">
+							<span className={`absolute inset-y-0 right-2 inline-flex items-center z-0 ${themeClasses.icon}`}>
 								<svg
 									xmlns="http://www.w3.org/2000/svg"
 									className="h-4 w-4"
@@ -180,7 +196,7 @@ export default function GearModal({ className }: { className?: string }) {
 							<select
 								id="lineNumbers"
 								data-testid="lineNumbers"
-								className="pl-2.5 pr-8 py-1.5 bg-transparent text-sm text-slate-600 border border-slate-300 rounded-lg shadow-sm outline-none appearance-none z-10"
+								className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
 								defaultValue={editorConfig.lineNumbers ?? 'off'}
 								{...register('lineNumbers')}
 							>
@@ -194,13 +210,13 @@ export default function GearModal({ className }: { className?: string }) {
 					{/* Show mini map */}
 					<div className="flex items-center justify-between py-4">
 						<label
-							className="text-base font-medium text-slate-700"
+							className={`text-base font-medium ${themeClasses.textSecondary}`}
 							htmlFor="minimap"
 						>
 							Show mini map
 						</label>
 						<input
-							className="w-5 h-5 border-gray-200 accent-slate-600"
+							className={`w-5 h-5 ${themeClasses.checkbox}`}
 							id="minimap"
 							type="checkbox"
 							value="minimap"
@@ -211,12 +227,12 @@ export default function GearModal({ className }: { className?: string }) {
 
 					<div className="pt-6 space-x-5 text-right">
 						<button
-							className="px-8 py-2.5 text-sm font-medium border border-slate-50 bg-slate-50 text-slate-500 rounded-lg shadow-sm transition duration-300 ease-in-out hover:cursor-pointer hover:text-white hover:bg-rose-400 focus:ring focus:ring-rose-300 focus:outline-none"
+							className={`px-8 py-2.5 text-sm font-medium border rounded-lg shadow-sm transition duration-300 ease-in-out hover:cursor-pointer focus:ring focus:outline-none ${themeClasses.button} ${themeClasses.buttonCancel}`}
 							onClick={handleCancel}
 						>
 							Cancel
 						</button>
-						<button className="px-8 py-2.5 text-sm font-medium bg-slate-50 text-slate-500 rounded-lg shadow-sm transition duration-300 ease-in-out hover:cursor-pointer hover:text-white hover:bg-slate-500 focus:ring focus:ring-slate-400 focus:outline-none">
+						<button className={`px-8 py-2.5 text-sm font-medium border rounded-lg shadow-sm transition duration-300 ease-in-out hover:cursor-pointer focus:ring focus:outline-none ${themeClasses.button} ${themeClasses.buttonSubmit}`}>
 							Submit
 						</button>
 					</div>

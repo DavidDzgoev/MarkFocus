@@ -121,7 +121,11 @@ const Home: NextPage = () => {
 
 				{/* Gear Modal */}
 				{gearStatus ? (
-					<GearModal className="absolute top-[180px] left-1/2 transform -translate-x-1/2 z-20 px-10 py-8 min-w-fit min-h-fit border border-slate-200 bg-white rounded-xl shadow-md" />
+					<GearModal className={`absolute top-[180px] left-1/2 transform -translate-x-1/2 z-20 px-10 py-8 min-w-fit min-h-fit rounded-xl shadow-md ${
+						isDark 
+							? 'border-gray-600' 
+							: 'border-slate-200'
+					}`} />
 				) : null}
 
 				{/* Left Sidebar */}
