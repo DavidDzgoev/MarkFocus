@@ -8,7 +8,7 @@ import { useSplitterStore } from '../global-stores/useSplitterStore';
 
 export default function MonacoEditor() {
 	const { markdownContent, setMarkdownContent, loadMarkdownContent } = useMarkdownContentStore();
-	const { setMonacoEditorOptions, focusMode, ...monacoEditorOptions } =
+	const { setMonacoEditorOptions, focusMode, theme, ...monacoEditorOptions } =
 		useMonacoEditorOptionsStore();
 	const { editorWidth, setEditorWidth } = useSplitterStore();
 	const monacoRef = React.useRef<typeof monaco | null>(null);
@@ -16,6 +16,9 @@ export default function MonacoEditor() {
 	const listenerRef = React.useRef<any>(null);
 	const decorationsRef = React.useRef<string[]>([]);
 	const [themeConfig, setThemeConfig] = React.useState<object | undefined>();
+
+	// Определяем классы для темной/светлой темы
+	const isDark = theme === 'vs-dark';
 
 	// Загружаем сохраненный контент при монтировании компонента
 	React.useEffect(() => {
@@ -194,7 +197,6 @@ export default function MonacoEditor() {
 	}, [focusMode]);
 
 	// Определяем классы для темной/светлой темы
-	const isDark = monacoEditorOptions.theme === 'vs-dark';
 
 	return (
 		<div className="relative h-full w-full">
@@ -230,7 +232,7 @@ export default function MonacoEditor() {
 				height="100%"
 				width="100%"
 				value={markdownContent}
-				theme={monacoEditorOptions.theme}
+				theme={theme}
 				language={monacoEditorOptions.language}
 				onChange={handleMonacoEditorChange}
 				onMount={handleEditorDidMount}

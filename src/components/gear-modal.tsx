@@ -22,12 +22,12 @@ type FormData = {
 export default function GearModal({ className }: { className?: string }) {
 	const { register, handleSubmit, control, setValue } = useForm<FormData>();
 	const { setGearStatus } = useGearStatusStore();
-	const { setMonacoEditorOptions, ...editorConfig } =
+	const { setMonacoEditorOptions, theme, ...editorConfig } =
 		useMonacoEditorOptionsStore();
 
 	// Устанавливаем значения формы при монтировании
 	React.useEffect(() => {
-		setValue('theme', editorConfig.theme);
+		setValue('theme', theme);
 		setValue('cursorBlinking', editorConfig.cursorBlinking);
 		setValue('cursorStyle', editorConfig.cursorStyle);
 		setValue('lineNumbers', editorConfig.lineNumbers);
@@ -35,7 +35,7 @@ export default function GearModal({ className }: { className?: string }) {
 	}, [editorConfig, setValue]);
 
 	// Определяем классы для темной/светлой темы
-	const isDark = editorConfig.theme === 'vs-dark';
+	const isDark = theme === 'vs-dark';
 	const themeClasses = {
 		background: isDark ? 'bg-[rgb(30,30,30)]' : 'bg-white',
 		text: isDark ? 'text-[#d4d4d4]' : 'text-slate-600',
@@ -93,7 +93,7 @@ export default function GearModal({ className }: { className?: string }) {
 							<Controller
 								name="theme"
 								control={control}
-								defaultValue={editorConfig.theme}
+								defaultValue={theme}
 								render={({ field }) => (
 									<select
 										{...field}
