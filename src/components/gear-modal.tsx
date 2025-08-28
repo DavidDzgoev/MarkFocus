@@ -44,9 +44,9 @@ export default function GearModal({ className }: { className?: string }) {
 		divider: isDark ? 'divide-gray-600' : 'divide-slate-100',
 		select: isDark ? 'bg-[rgb(45,45,45)] border-gray-600 text-[#d4d4d4]' : 'bg-transparent border-slate-300 text-slate-600',
 		icon: isDark ? 'text-gray-400' : 'text-slate-500',
-		button: isDark ? 'bg-[rgb(45,45,45)] border-gray-600 text-[#d4d4d4] hover:bg-[rgb(55,55,55)]' : 'bg-slate-50 border-slate-50 text-slate-500 hover:bg-slate-100',
-		buttonCancel: isDark ? 'hover:bg-red-800 hover:text-red-200' : 'hover:bg-rose-400 hover:text-white',
-		buttonSubmit: isDark ? 'hover:bg-gray-600 hover:text-gray-200' : 'hover:bg-slate-500 hover:text-white',
+		button: isDark ? 'bg-[rgb(45,45,45)] border-gray-600 text-gray-300 hover:text-gray-100' : 'bg-white border-slate-200 text-slate-600 hover:text-slate-800',
+		buttonCancel: isDark ? 'bg-[rgb(45,45,45)] border-gray-600 text-gray-300 hover:text-gray-100' : 'bg-white border-slate-200 text-slate-600 hover:text-slate-800',
+		buttonSubmit: isDark ? 'bg-[rgb(45,45,45)] border-gray-600 text-gray-300 hover:text-gray-100' : 'bg-white border-slate-200 text-slate-600 hover:text-slate-800',
 		checkbox: isDark ? 'border-gray-600 accent-gray-400' : 'border-gray-200 accent-slate-600',
 	};
 
@@ -258,12 +258,12 @@ export default function GearModal({ className }: { className?: string }) {
 
 					<div className="pt-6 space-x-5 text-right">
 						<button
-							className={`px-8 py-2.5 text-sm font-medium border rounded-lg shadow-sm transition duration-300 ease-in-out hover:cursor-pointer focus:ring focus:outline-none ${themeClasses.button} ${themeClasses.buttonCancel}`}
+							className={`px-8 py-2.5 text-sm font-medium rounded-lg shadow-sm border transition duration-300 ease-in-out hover:shadow-md ${themeClasses.buttonCancel}`}
 							onClick={handleCancel}
 						>
 							Cancel
 						</button>
-						<button className={`px-8 py-2.5 text-sm font-medium border rounded-lg shadow-sm transition duration-300 ease-in-out hover:cursor-pointer focus:ring focus:outline-none ${themeClasses.button} ${themeClasses.buttonSubmit}`}>
+						<button className={`px-8 py-2.5 text-sm font-medium rounded-lg shadow-sm border transition duration-300 ease-in-out hover:shadow-md ${themeClasses.buttonSubmit}`}>
 							Submit
 						</button>
 					</div>
