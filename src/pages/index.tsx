@@ -181,8 +181,12 @@ const Home: NextPage = () => {
 
 					{/* Splitter */}
 					<div
-						className={`h-full w-1 bg-gray-300 hover:bg-gray-400 cursor-col-resize transition-colors duration-200 ${
+						className={`h-full w-1 cursor-col-resize transition-colors duration-200 ${
 							editorWidth === 0 || editorWidth === 100 ? 'hidden' : ''
+						} ${
+							isDark 
+								? 'bg-[#2D2D2D] hover:bg-[#4f4f4f]' 
+								: 'bg-[#f7f6f3] hover:bg-[#d4d3cf]'
 						}`}
 						onMouseDown={handleMouseDown}
 						onDoubleClick={handleDoubleClick}
