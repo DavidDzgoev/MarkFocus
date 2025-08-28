@@ -3,14 +3,21 @@ import Image from 'next/image';
 import { useGearStatusStore } from '../global-stores/useGearStatusStore';
 import { useMonacoEditorOptionsStore } from '../global-stores/useMonacoEditorOptionsStore';
 import { useSidebarStatusStore } from '../global-stores/useSidebarStatusStore';
+import { useMarkdownContentStore } from '../global-stores/useMarkdownContentStore';
 
 export default function SideBar() {
 	const { setGearStatus } = useGearStatusStore();
 	const { focusMode, setMonacoEditorOptions } = useMonacoEditorOptionsStore();
 	const { isOpen, closeSidebar } = useSidebarStatusStore();
+	const { clearMarkdownContent } = useMarkdownContentStore();
 	
 	const handleGearClick = () => setGearStatus();
 	const handleFocusModeToggle = () => setMonacoEditorOptions({ focusMode: !focusMode });
+	const handleClearContent = () => {
+		if (confirm('Вы уверены, что хотите очистить весь контент? Это действие нельзя отменить.')) {
+			clearMarkdownContent();
+		}
+	};
 
 	if (!isOpen) return null;
 
@@ -80,6 +87,31 @@ export default function SideBar() {
 						/>
 					</button>
 				</div>
+			</div>
+
+			{/* Clear Content Button */}
+			<div className="mb-4">
+				<button
+					onClick={handleClearContent}
+					className="w-full flex items-center justify-center p-3 bg-red-50 hover:bg-red-100 rounded-lg shadow-sm border border-red-200 text-red-600 transition duration-300 ease-in-out hover:text-red-700 hover:shadow-md"
+					title="Clear all content"
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						className="h-5 w-5 mr-2"
+						fill="none"
+						viewBox="0 0 24 24"
+						stroke="currentColor"
+						strokeWidth="2"
+					>
+						<path
+							strokeLinecap="round"
+							strokeLinejoin="round"
+							d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+						/>
+					</svg>
+					<span className="text-sm font-medium">Clear Content</span>
+				</button>
 			</div>
 
 			{/* Settings Button - под Focus Mode */}

@@ -4,7 +4,7 @@ import { getCurrentParagraph } from '../lib/focus-utils';
 import { useState, useRef, useEffect } from 'react';
 
 export default function Textarea() {
-	const { markdownContent, setMarkdownContent } = useMarkdownContentStore();
+	const { markdownContent, setMarkdownContent, loadMarkdownContent } = useMarkdownContentStore();
 	const { setMonacoEditorOptions, focusMode, ...monacoEditorOptions } =
 		useMonacoEditorOptionsStore();
 	
@@ -14,6 +14,11 @@ export default function Textarea() {
 		endIndex: number;
 		paragraphText: string;
 	} | null>(null);
+
+	// Загружаем сохраненный контент при монтировании компонента
+	useEffect(() => {
+		loadMarkdownContent();
+	}, [loadMarkdownContent]);
 
 	function handleTextChange(event: React.ChangeEvent<HTMLTextAreaElement>) {
 		setMarkdownContent(event.target.value);

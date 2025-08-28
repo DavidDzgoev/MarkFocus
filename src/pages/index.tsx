@@ -1,6 +1,7 @@
 /* eslint-disable react/no-children-prop */
 import type { NextPage } from 'next';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
 
 import GearModal from '../components/gear-modal';
@@ -21,6 +22,13 @@ const Home: NextPage = () => {
 		useMonacoEditorOptionsStore();
 	const { isOpen, openSidebar } = useSidebarStatusStore();
 	const { editorWidth, minEditorWidth, maxEditorWidth, setEditorWidth } = useSplitterStore();
+	
+	// Add state to track if component is mounted
+	const [isMounted, setIsMounted] = useState(false);
+
+	useEffect(() => {
+		setIsMounted(true);
+	}, []);
 
 	const editorTheme = () => {
 		const darkThemes = ['vs-dark'];
@@ -34,6 +42,9 @@ const Home: NextPage = () => {
 	// Обработчик перетаскивания разделителя
 	const handleMouseDown = (e: React.MouseEvent) => {
 		e.preventDefault();
+		
+		// Only run on client side
+		if (!isMounted) return;
 		
 		const startX = e.clientX;
 		const startWidth = editorWidth;
@@ -75,6 +86,25 @@ const Home: NextPage = () => {
 	const handleDoubleClick = () => {
 		setEditorWidth(50);
 	};
+
+	// Don't render until mounted to prevent hydration mismatch
+	if (!isMounted) {
+		return (
+			<div>
+				<Head>
+					<title>MarkFocus</title>
+					<meta name="description" content="MarkFocus" />
+					<link rel="icon" href="/favicon.ico" />
+				</Head>
+				<main className="relative h-screen flex min-w-[768px]">
+					{/* Show a loading state or skeleton */}
+					<div className="w-full h-full flex items-center justify-center">
+						<div className="text-gray-500">Loading...</div>
+					</div>
+				</main>
+			</div>
+		);
+	}
 
 	return (
 		<div>

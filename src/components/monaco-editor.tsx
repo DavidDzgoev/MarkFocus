@@ -7,7 +7,7 @@ import { useMonacoEditorOptionsStore } from '../global-stores/useMonacoEditorOpt
 import { useSplitterStore } from '../global-stores/useSplitterStore';
 
 export default function MonacoEditor() {
-	const { setMarkdownContent } = useMarkdownContentStore();
+	const { markdownContent, setMarkdownContent, loadMarkdownContent } = useMarkdownContentStore();
 	const { setMonacoEditorOptions, focusMode, ...monacoEditorOptions } =
 		useMonacoEditorOptionsStore();
 	const { editorWidth, setEditorWidth } = useSplitterStore();
@@ -16,6 +16,11 @@ export default function MonacoEditor() {
 	const listenerRef = React.useRef<any>(null);
 	const decorationsRef = React.useRef<string[]>([]);
 	const [themeConfig, setThemeConfig] = React.useState<object | undefined>();
+
+	// Загружаем сохраненный контент при монтировании компонента
+	React.useEffect(() => {
+		loadMarkdownContent();
+	}, [loadMarkdownContent]);
 
 	function handleMonacoEditorChange(
 		value: string | undefined,
@@ -217,6 +222,7 @@ export default function MonacoEditor() {
 			<ReactMonacoEditor
 				height="100%"
 				width="100%"
+				value={markdownContent}
 				theme={monacoEditorOptions.theme}
 				language={monacoEditorOptions.language}
 				onChange={handleMonacoEditorChange}
