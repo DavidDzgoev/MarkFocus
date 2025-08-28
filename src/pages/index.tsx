@@ -18,7 +18,7 @@ import { useSplitterStore } from '../global-stores/useSplitterStore';
 
 const Home: NextPage = () => {
 	const { gearStatus } = useGearStatusStore();
-	const { setMonacoEditorOptions, ...monacoEditorOptions } =
+	const { setMonacoEditorOptions, theme, ...monacoEditorOptions } =
 		useMonacoEditorOptionsStore();
 	const { isOpen, openSidebar } = useSidebarStatusStore();
 	const { editorWidth, minEditorWidth, maxEditorWidth, setEditorWidth } = useSplitterStore();
@@ -32,7 +32,7 @@ const Home: NextPage = () => {
 
 	const editorTheme = () => {
 		const darkThemes = ['vs-dark'];
-		if (darkThemes.includes(monacoEditorOptions.theme)) {
+		if (darkThemes.includes(theme)) {
 			return true;
 		}
 	};
@@ -126,7 +126,7 @@ const Home: NextPage = () => {
 
 				{/* Left Sidebar */}
 				{isOpen && (
-					<div className="w-64 h-screen bg-notion-yellow z-10">
+					<div className="w-64 h-screen z-10">
 						<SiderBar />
 					</div>
 				)}
@@ -147,7 +147,11 @@ const Home: NextPage = () => {
 							{!isOpen && (
 								<button
 									onClick={openSidebar}
-									className="absolute top-4 left-4 z-20 p-2 bg-white rounded-lg shadow-md border border-slate-200 text-slate-600 transition duration-300 ease-in-out hover:text-slate-800 hover:shadow-lg"
+									className={`absolute top-4 left-4 z-20 p-2 rounded-lg shadow-md border transition duration-300 ease-in-out hover:shadow-lg ${
+										isDark 
+											? 'bg-[rgb(30,30,30)] border-gray-600 text-gray-300 hover:text-gray-100' 
+											: 'bg-white border-slate-200 text-slate-600 hover:text-slate-800'
+									}`}
 									title="Open sidebar"
 								>
 									<svg

@@ -7,9 +7,20 @@ import { useMarkdownContentStore } from '../global-stores/useMarkdownContentStor
 
 export default function SideBar() {
 	const { setGearStatus } = useGearStatusStore();
-	const { focusMode, setMonacoEditorOptions } = useMonacoEditorOptionsStore();
+	const { focusMode, setMonacoEditorOptions, theme } = useMonacoEditorOptionsStore();
 	const { isOpen, closeSidebar } = useSidebarStatusStore();
 	const { clearMarkdownContent } = useMarkdownContentStore();
+	
+	// Определяем классы для темной/светлой темы
+	const isDark = theme === 'vs-dark';
+	const themeClasses = {
+		background: isDark ? 'bg-[#2D2D2D]' : 'bg-notion-yellow',
+		text: isDark ? 'text-[#d4d4d4]' : 'text-slate-700',
+		button: isDark ? 'bg-[rgb(45,45,45)] border-gray-600 text-gray-300 hover:text-gray-100' : 'bg-white border-slate-200 text-slate-600 hover:text-slate-800',
+		closeButton: isDark ? 'text-gray-300 hover:text-gray-100' : 'text-slate-600 hover:text-slate-800',
+		focusModeText: isDark ? 'text-gray-300' : 'text-slate-700',
+		clearButton: isDark ? 'bg-red-900 hover:bg-red-800 border-red-700 text-red-300 hover:text-red-200' : 'bg-red-50 hover:bg-red-100 border-red-200 text-red-600 hover:text-red-700',
+	};
 	
 	const handleGearClick = () => setGearStatus();
 	const handleFocusModeToggle = () => setMonacoEditorOptions({ focusMode: !focusMode });
@@ -22,14 +33,14 @@ export default function SideBar() {
 	if (!isOpen) return null;
 
 	return (
-		<div className="relative h-screen px-4 flex flex-col">
+		<div className={`relative h-screen px-4 flex flex-col ${themeClasses.background}`}>
 			<div className="flex justify-between items-center pt-10">
 				<span className="inline-block">
 					<Image width="50px" height="50px" src="/md-icon.png" alt="icon" />
 				</span>
 				<button
 					onClick={closeSidebar}
-					className="inline-block rounded-lg text-slate-600 transition duration-300 ease-in-out hover:text-slate-800 hover:cursor-pointer"
+					className={`inline-block rounded-lg transition duration-300 ease-in-out hover:cursor-pointer ${themeClasses.closeButton}`}
 					title="Close sidebar"
 				>
 					<svg
@@ -51,11 +62,11 @@ export default function SideBar() {
 			
 			{/* Focus Mode Toggle - внизу sidebar */}
 			<div className="mt-auto mb-4">
-				<div className="flex items-center justify-between p-3 bg-white rounded-lg shadow-sm border border-slate-200">
+				<div className={`flex items-center justify-between p-3 rounded-lg shadow-sm border transition duration-300 ease-in-out ${themeClasses.button}`}>
 					<div className="flex items-center space-x-3">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
-							className={`h-5 w-5 ${focusMode ? 'text-blue-600' : 'text-slate-400'}`}
+							className={`h-5 w-5 ${focusMode ? 'text-blue-600' : (isDark ? 'text-gray-500' : 'text-slate-400')}`}
 							fill="none"
 							viewBox="0 0 24 24"
 							stroke="currentColor"
@@ -72,12 +83,12 @@ export default function SideBar() {
 								d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
 							/>
 						</svg>
-						<span className="text-sm font-medium text-slate-700">Focus Mode</span>
+						<span className={`text-sm font-medium ${themeClasses.focusModeText}`}>Focus Mode</span>
 					</div>
 					<button
 						onClick={handleFocusModeToggle}
 						className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-							focusMode ? 'bg-blue-600' : 'bg-gray-200'
+							focusMode ? 'bg-blue-600' : (isDark ? 'bg-gray-600' : 'bg-gray-200')
 						}`}
 					>
 						<span
@@ -93,7 +104,7 @@ export default function SideBar() {
 			<div className="mb-4">
 				<button
 					onClick={handleClearContent}
-					className="w-full flex items-center justify-center p-3 bg-red-50 hover:bg-red-100 rounded-lg shadow-sm border border-red-200 text-red-600 transition duration-300 ease-in-out hover:text-red-700 hover:shadow-md"
+					className={`w-full flex items-center justify-center p-3 rounded-lg shadow-sm border transition duration-300 ease-in-out hover:shadow-md ${themeClasses.clearButton}`}
 					title="Clear all content"
 				>
 					<svg
@@ -118,7 +129,7 @@ export default function SideBar() {
 			<div className="mb-6">
 				<button
 					onClick={handleGearClick}
-					className="w-full flex items-center justify-center p-3 bg-white rounded-lg shadow-sm border border-slate-200 text-slate-600 transition duration-300 ease-in-out hover:text-slate-800 hover:shadow-md"
+					className={`w-full flex items-center justify-center p-3 rounded-lg shadow-sm border transition duration-300 ease-in-out hover:shadow-md ${themeClasses.button}`}
 					title="Settings"
 				>
 					<svg
