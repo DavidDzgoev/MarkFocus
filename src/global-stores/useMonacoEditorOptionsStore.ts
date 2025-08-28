@@ -26,6 +26,22 @@ type MonacoEditorOptionsStore = {
 	focusMode: boolean;
 };
 
+// Функция для получения сохраненных настроек из localStorage
+const getSavedOptions = (): Partial<MonacoEditorOptionsStore> => {
+	if (typeof window !== 'undefined') {
+		const saved = localStorage.getItem('monaco-editor-options');
+		return saved ? JSON.parse(saved) : {};
+	}
+	return {};
+};
+
+// Функция для сохранения настроек в localStorage
+const saveOptions = (options: MonacoEditorOptionsStore): void => {
+	if (typeof window !== 'undefined') {
+		localStorage.setItem('monaco-editor-options', JSON.stringify(options));
+	}
+};
+
 export const useMonacoEditorOptionsStore = create(
 	combine(
 		{
@@ -45,12 +61,46 @@ export const useMonacoEditorOptionsStore = create(
 			cursorBlinking: 'smooth',
 			cursorStyle: 'underline',
 			focusMode: false,
+			...getSavedOptions(), // Загружаем сохраненные настройки при инициализации
 		} as MonacoEditorOptionsStore,
 		(set, get) => ({
 			setMonacoEditorOptions: (
 				newOptions: Partial<MonacoEditorOptionsStore>
 			) => {
-				set({ ...get(), ...newOptions });
+				const updatedOptions = { ...get(), ...newOptions };
+				set(updatedOptions);
+				// Сохраняем в localStorage при каждом изменении
+				saveOptions(updatedOptions);
+			},
+			// Функция для очистки сохраненных настроек
+			clearMonacoEditorOptions: () => {
+				const defaultOptions = {
+					editorType: 'monaco',
+					theme: 'vs-light',
+					language: 'markdown',
+					minimap: false,
+					verticalScrollbar: 'hidden',
+					verticalScrollbarSize: 0,
+					horizontalScrollbar: 'hidden',
+					horizontalScrollbarSize: 0,
+					lineNumbers: 'on',
+					folding: false,
+					fontSize: 15,
+					lineDecorationsWidth: 15,
+					renderLineHighlight: 'line',
+					cursorBlinking: 'smooth',
+					cursorStyle: 'underline',
+					focusMode: false,
+				} as MonacoEditorOptionsStore;
+				set(defaultOptions);
+				if (typeof window !== 'undefined') {
+					localStorage.removeItem('monaco-editor-options');
+				}
+			},
+			// Функция для загрузки настроек из localStorage
+			loadMonacoEditorOptions: () => {
+				const savedOptions = getSavedOptions();
+				set({ ...get(), ...savedOptions });
 			},
 		})
 	)
