@@ -26,19 +26,26 @@ type MonacoEditorOptionsStore = {
 	focusMode: boolean;
 };
 
-// Функция для получения сохраненных настроек из localStorage
+// Функция для получения сохраненных настроек из localStorage (исключаем focusMode)
 const getSavedOptions = (): Partial<MonacoEditorOptionsStore> => {
 	if (typeof window !== 'undefined') {
 		const saved = localStorage.getItem('monaco-editor-options');
-		return saved ? JSON.parse(saved) : {};
+		if (saved) {
+			const parsed = JSON.parse(saved);
+			// Удаляем focusMode из сохраненных настроек
+			const { focusMode, ...optionsToLoad } = parsed;
+			return optionsToLoad;
+		}
 	}
 	return {};
 };
 
-// Функция для сохранения настроек в localStorage
+// Функция для сохранения настроек в localStorage (исключаем focusMode)
 const saveOptions = (options: MonacoEditorOptionsStore): void => {
 	if (typeof window !== 'undefined') {
-		localStorage.setItem('monaco-editor-options', JSON.stringify(options));
+		// Создаем копию без focusMode для сохранения
+		const { focusMode, ...optionsToSave } = options;
+		localStorage.setItem('monaco-editor-options', JSON.stringify(optionsToSave));
 	}
 };
 
@@ -61,7 +68,7 @@ export const useMonacoEditorOptionsStore = create(
 			cursorBlinking: 'smooth',
 			cursorStyle: 'underline',
 			focusMode: false,
-			...getSavedOptions(), // Загружаем сохраненные настройки при инициализации
+			...getSavedOptions(), // Загружаем сохраненные настройки (без focusMode)
 		} as MonacoEditorOptionsStore,
 		(set, get) => ({
 			setMonacoEditorOptions: (
@@ -69,7 +76,7 @@ export const useMonacoEditorOptionsStore = create(
 			) => {
 				const updatedOptions = { ...get(), ...newOptions };
 				set(updatedOptions);
-				// Сохраняем в localStorage при каждом изменении
+				// Сохраняем в localStorage при каждом изменении (без focusMode)
 				saveOptions(updatedOptions);
 			},
 			// Функция для очистки сохраненных настроек
