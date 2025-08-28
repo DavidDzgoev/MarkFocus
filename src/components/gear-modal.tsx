@@ -99,8 +99,8 @@ export default function GearModal({ className }: { className?: string }) {
 										{...field}
 										className={`pl-2.5 pr-8 py-1.5 text-sm rounded-lg shadow-sm outline-none appearance-none z-10 ${themeClasses.select}`}
 									>
-										<option value="vs-light">VS Light</option>
-										<option value="vs-dark">VS Dark</option>
+										<option value="vs-light">Light</option>
+										<option value="vs-dark">Dark</option>
 									</select>
 								)}
 							/>
