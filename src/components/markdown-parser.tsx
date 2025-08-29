@@ -61,7 +61,7 @@ export default function MarkdownParser() {
 				</button>
 			)}
 
-			<div className={`h-full overflow-y-auto p-6 ${themeClasses.prose} max-w-none`}>
+			<div className={`h-full overflow-y-auto overflow-x-hidden p-6 ${themeClasses.prose} max-w-none break-words`}>
 				<ReactMarkdownParser
 					remarkPlugins={[remarkGfm]}
 					components={{
@@ -75,11 +75,30 @@ export default function MarkdownParser() {
 									language={match[1]}
 									PreTag="div"
 									{...props}
+									wrapLines={true}
+									showLineNumbers={false}
+									customStyle={{
+										maxWidth: '100%',
+										overflow: 'auto',
+										wordBreak: 'break-word',
+									}}
 								/>
 							) : (
-								<code className={`${className} ${themeClasses.text}`} {...props}>
+								<code className={`${className} ${themeClasses.text} break-words`} {...props}>
 									{children}
 								</code>
+							);
+						},
+						// Добавляем обработку для pre блоков
+						pre({ children, ...props }) {
+							return (
+								<pre 
+									{...props} 
+									className="max-w-full overflow-x-auto break-words"
+									style={{ wordBreak: 'break-word' }}
+								>
+									{children}
+								</pre>
 							);
 						},
 					}}
