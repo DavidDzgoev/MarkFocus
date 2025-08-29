@@ -305,6 +305,14 @@ export default function MonacoEditor() {
 					},
 					wordWrap: 'on',
 					
+					// Добавляем новые настройки для лучшего отображения номеров строк
+					glyphMargin: true, // Включаем дополнительное пространство слева
+					lineNumbersMinChars: 3, // Минимальное количество символов для номеров строк
+					padding: {
+						top: 5,
+						bottom: 5
+					},
+					
 					// Отключаем автодополнение
 					quickSuggestions: false,
 					suggestOnTriggerCharacters: false,

@@ -64,7 +64,7 @@ export const useMonacoEditorOptionsStore = create(
 			lineNumbers: 'on',
 			folding: false,
 			fontSize: 15,
-			lineDecorationsWidth: 15,
+			lineDecorationsWidth: 35, // Увеличиваем с 15 до 35
 			renderLineHighlight: 'line',
 			cursorBlinking: 'smooth',
 			cursorStyle: 'underline',
@@ -95,7 +95,7 @@ export const useMonacoEditorOptionsStore = create(
 					lineNumbers: 'on',
 					folding: false,
 					fontSize: 15,
-					lineDecorationsWidth: 15,
+					lineDecorationsWidth: 35, // Увеличиваем с 15 до 35
 					renderLineHighlight: 'line',
 					cursorBlinking: 'smooth',
 					cursorStyle: 'underline',
