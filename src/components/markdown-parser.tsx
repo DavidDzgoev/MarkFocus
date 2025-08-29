@@ -81,6 +81,7 @@ export default function MarkdownParser() {
 										maxWidth: '100%',
 										overflow: 'auto',
 										wordBreak: 'break-word',
+										whiteSpace: 'pre-wrap',
 									}}
 								/>
 							) : (
@@ -94,13 +95,55 @@ export default function MarkdownParser() {
 							return (
 								<pre 
 									{...props} 
-									className="max-w-full overflow-x-auto break-words"
-									style={{ wordBreak: 'break-word' }}
+									className="max-w-full overflow-x-auto break-words whitespace-pre-wrap"
+									style={{ 
+										wordBreak: 'break-word',
+										whiteSpace: 'pre-wrap'
+									}}
 								>
 									{children}
 								</pre>
 							);
 						},
+						// Добавляем обработку для всех текстовых элементов
+						p({ children, ...props }) {
+							return (
+								<p 
+									{...props} 
+									className="break-words whitespace-pre-wrap"
+									style={{ wordBreak: 'break-word' }}
+								>
+									{children}
+								</p>
+							);
+						},
+						// Обработка для заголовков
+						h1: ({ children, ...props }) => (
+							<h1 {...props} className="break-words whitespace-pre-wrap">{children}</h1>
+						),
+						h2: ({ children, ...props }) => (
+							<h2 {...props} className="break-words whitespace-pre-wrap">{children}</h2>
+						),
+						h3: ({ children, ...props }) => (
+							<h3 {...props} className="break-words whitespace-pre-wrap">{children}</h3>
+						),
+						h4: ({ children, ...props }) => (
+							<h4 {...props} className="break-words whitespace-pre-wrap">{children}</h4>
+						),
+						h5: ({ children, ...props }) => (
+							<h5 {...props} className="break-words whitespace-pre-wrap">{children}</h5>
+						),
+						h6: ({ children, ...props }) => (
+							<h6 {...props} className="break-words whitespace-pre-wrap">{children}</h6>
+						),
+						// Обработка для списков
+						li: ({ children, ...props }) => (
+							<li {...props} className="break-words whitespace-pre-wrap">{children}</li>
+						),
+						// Обработка для блоков цитат
+						blockquote: ({ children, ...props }) => (
+							<blockquote {...props} className="break-words whitespace-pre-wrap">{children}</blockquote>
+						),
 					}}
 				>
 					{markdownContent}
