@@ -303,8 +303,7 @@ export default function MonacoEditor() {
 						vertical: monacoEditorOptions.verticalScrollbar,
 						verticalScrollbarSize: monacoEditorOptions.verticalScrollbarSize,
 					},
-					wordWrap: 'on', 
-					wordWrapColumn: 80,
+					wordWrap: 'on'
 				}}
 			/>
 		</div>
