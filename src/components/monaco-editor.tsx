@@ -303,6 +303,7 @@ export default function MonacoEditor() {
 						vertical: monacoEditorOptions.verticalScrollbar,
 						verticalScrollbarSize: monacoEditorOptions.verticalScrollbarSize,
 					},
+					wordWrap: 'on', // Включаем автоматический перенос слов
 				}}
 			/>
 		</div>
