@@ -24,27 +24,28 @@ type MonacoEditorOptionsStore = {
 		| 'block-outline'
 		| 'underline-thin';
 	focusMode: boolean;
+	typewriterMode: boolean;
 };
 
-// Функция для получения сохраненных настроек из localStorage (исключаем focusMode)
+// Функция для получения сохраненных настроек из localStorage (исключаем focusMode и typewriterMode)
 const getSavedOptions = (): Partial<MonacoEditorOptionsStore> => {
 	if (typeof window !== 'undefined') {
 		const saved = localStorage.getItem('monaco-editor-options');
 		if (saved) {
 			const parsed = JSON.parse(saved);
-			// Удаляем focusMode из сохраненных настроек
-			const { focusMode, ...optionsToLoad } = parsed;
+			// Удаляем focusMode и typewriterMode из сохраненных настроек
+			const { focusMode, typewriterMode, ...optionsToLoad } = parsed;
 			return optionsToLoad;
 		}
 	}
 	return {};
 };
 
-// Функция для сохранения настроек в localStorage (исключаем focusMode)
+// Функция для сохранения настроек в localStorage (исключаем focusMode и typewriterMode)
 const saveOptions = (options: MonacoEditorOptionsStore): void => {
 	if (typeof window !== 'undefined') {
-		// Создаем копию без focusMode для сохранения
-		const { focusMode, ...optionsToSave } = options;
+		// Создаем копию без focusMode и typewriterMode для сохранения
+		const { focusMode, typewriterMode, ...optionsToSave } = options;
 		localStorage.setItem('monaco-editor-options', JSON.stringify(optionsToSave));
 	}
 };
@@ -68,6 +69,7 @@ export const useMonacoEditorOptionsStore = create(
 			cursorBlinking: 'smooth',
 			cursorStyle: 'underline',
 			focusMode: false,
+			typewriterMode: false,
 			...getSavedOptions(), // Загружаем сохраненные настройки (без focusMode)
 		} as MonacoEditorOptionsStore,
 		(set, get) => ({
@@ -98,6 +100,7 @@ export const useMonacoEditorOptionsStore = create(
 					cursorBlinking: 'smooth',
 					cursorStyle: 'underline',
 					focusMode: false,
+					typewriterMode: false,
 				} as MonacoEditorOptionsStore;
 				set(defaultOptions);
 				if (typeof window !== 'undefined') {

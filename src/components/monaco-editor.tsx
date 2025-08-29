@@ -8,12 +8,13 @@ import { useSplitterStore } from '../global-stores/useSplitterStore';
 
 export default function MonacoEditor() {
 	const { markdownContent, setMarkdownContent, loadMarkdownContent } = useMarkdownContentStore();
-	const { setMonacoEditorOptions, focusMode, theme, ...monacoEditorOptions } =
+	const { setMonacoEditorOptions, focusMode, typewriterMode, theme, ...monacoEditorOptions } =
 		useMonacoEditorOptionsStore();
 	const { editorWidth, setEditorWidth } = useSplitterStore();
 	const monacoRef = React.useRef<typeof monaco | null>(null);
 	const editorRef = React.useRef<any>(null);
 	const listenerRef = React.useRef<any>(null);
+	const typewriterListenerRef = React.useRef<any>(null);
 	const decorationsRef = React.useRef<string[]>([]);
 	const [themeConfig, setThemeConfig] = React.useState<object | undefined>();
 
@@ -139,6 +140,30 @@ export default function MonacoEditor() {
 		decorationsRef.current = editor.deltaDecorations(decorationsRef.current, newDecorations);
 	}
 
+	// Функция для центрирования текущей строки в режиме печатной машинки
+	const centerCurrentLine = (editor: any) => {
+		if (!typewriterMode || !editor) return;
+		
+		const position = editor.getPosition();
+		if (!position) return;
+		
+		const model = editor.getModel();
+		if (!model) return;
+		
+		const lineNumber = position.lineNumber;
+		const totalLines = model.getLineCount();
+		
+		// Вычисляем позицию для центрирования
+		const visibleLines = editor.getVisibleRanges()[0];
+		if (!visibleLines) return;
+		
+		const visibleLineCount = visibleLines.endLineNumber - visibleLines.startLineNumber;
+		const targetLine = Math.max(1, Math.min(totalLines, lineNumber));
+		
+		// Прокручиваем к целевой строке с центрированием
+		editor.revealLineInCenter(targetLine);
+	};
+
 	// Управляем слушателем при изменении focusMode
 	React.useEffect(() => {
 		if (!editorRef.current) return;
@@ -168,6 +193,33 @@ export default function MonacoEditor() {
 			}
 		};
 	}, [focusMode]);
+
+	// Управляем слушателем при изменении typewriterMode
+	React.useEffect(() => {
+		if (!editorRef.current) return;
+		
+		if (typewriterMode) {
+			// Создаем слушатель для режима печатной машинки
+			typewriterListenerRef.current = editorRef.current.onDidChangeCursorPosition(() => {
+				centerCurrentLine(editorRef.current);
+			});
+			// Сразу центрируем текущую строку
+			centerCurrentLine(editorRef.current);
+		} else {
+			// Удаляем слушатель
+			if (typewriterListenerRef.current) {
+				typewriterListenerRef.current.dispose();
+				typewriterListenerRef.current = null;
+			}
+		}
+
+		// Cleanup при размонтировании
+		return () => {
+			if (typewriterListenerRef.current) {
+				typewriterListenerRef.current.dispose();
+			}
+		};
+	}, [typewriterMode]);
 
 	// Добавляем CSS для подсветки
 	React.useEffect(() => {
