@@ -303,7 +303,12 @@ export default function MonacoEditor() {
 						vertical: monacoEditorOptions.verticalScrollbar,
 						verticalScrollbarSize: monacoEditorOptions.verticalScrollbarSize,
 					},
-					wordWrap: 'on'
+					wordWrap: 'on',
+					
+					// Отключаем автодополнение
+					quickSuggestions: false,
+					suggestOnTriggerCharacters: false,
+					acceptSuggestionOnEnter: 'off'
 				}}
 			/>
 		</div>
