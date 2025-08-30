@@ -41,9 +41,9 @@ export default function SideBar() {
 		<div className={`relative h-screen px-4 flex flex-col ${themeClasses.background}`}>
 			<div className="flex justify-between items-center pt-10">
 				<span className="inline-block">
-					<Image 
-						width="57px" 
-						height="35px" 
+					<img 
+						width="57" 
+						height="35" 
 						src={isDark ? "/md-icon-darktheme.png" : "/md-icon-lighttheme.png"} 
 						alt="icon" 
 					/>
