@@ -41,7 +41,12 @@ export default function SideBar() {
 		<div className={`relative h-screen px-4 flex flex-col ${themeClasses.background}`}>
 			<div className="flex justify-between items-center pt-10">
 				<span className="inline-block">
-					<Image width="50px" height="50px" src="/md-icon.png" alt="icon" />
+					<Image 
+						width="57px" 
+						height="35px" 
+						src={isDark ? "/md-icon-darktheme.png" : "/md-icon-lighttheme.png"} 
+						alt="icon" 
+					/>
 				</span>
 				<button
 					onClick={closeSidebar}
