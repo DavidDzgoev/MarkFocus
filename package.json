@@ -5,10 +5,12 @@
 	"scripts": {
 		"dev": "next dev",
 		"build": "next build",
+		"export": "next build && next export",
 		"start": "next start",
 		"lint": "next lint",
 		"test": "jest --watch",
-		"cypress": "cypress open"
+		"cypress": "cypress open",
+		"deploy": "npm run build"
 	},
 	"dependencies": {
 		"@monaco-editor/react": "^4.4.2",
